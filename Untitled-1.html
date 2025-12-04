@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaji Kirana - Grocery Bliss</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+
+        /* HEADER */
+        header {
+            background: black;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+        .search-cart {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar {
+            padding: 5px;
+            border: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* SLIDER */
+        .slider {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slides {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slides img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slides img.active {
+            opacity: 1;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+        }
+
+        .arrow:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .arrow.left {
+            left: 10px;
+        }
+
+        .arrow.right {
+            right: 10px;
+        }
+
+        /* CATEGORIES */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .category {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .category:hover {
+            background: #2a6bd5;
+            color: white;
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            margin: 30px 0 20px;
+            color: #444;
+            font-weight: bold;
+        }
+
+        /* PRODUCTS GRID */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 20px 40px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+        }
+
+        .product-card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+        .price {
+            font-size: 18px;
+            color: #2a6bd5;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #2a6bd5;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background: #2a6bd5;
+        }
+
+        /* ABOUT */
+        .about {
+            background: linear-gradient(135deg, #2a6bd5, #1a4bb8);
+            color: white;
+            padding: 60px 40px;
+            margin: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+        }
+        .about::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        .about h2 {
+            margin-top: 0;
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .about p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 20px 0 0 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* CONTACT */
+        .contact {
+            background: #fff;
+            padding: 40px 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .contact form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .contact input, .contact textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #222;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* SMALLER LOGO */
+        .logo img {
+            width: 100px;
+            height: 100%;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            nav {
+                margin-top: 10px;
+            }
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">
+        <img src="6.png" alt="Balaji Kirana Logo">
+        <h1>Balaji Kirana</h1>
+    </div>
+    <div class="search-cart">
+        <input type="text" class="search-bar" placeholder="Search products..." id="search">
+        <div class="cart-icon" onclick="showCart()">
+            🛒 <span class="cart-count" id="cart-count">0</span>
+        </div>
+    </div>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#offers">Offers</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<!-- SLIDER -->
+<div class="slider" id="home">
+    <div class="slides">
+        <img src="2.jpg" alt="Groceries" class="active">
+        <img src="3.jpg" alt="Daily Needs">
+        <img src="4.jpg" alt="Fresh Produce">
+        <img src="2.jpg" alt="Groceries">
+    </div>
+    <button class="arrow left" onclick="prevSlide()">&#10094;</button>
+    <button class="arrow right" onclick="nextSlide()">&#10095;</button>
+    <div class="slider-nav">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+    </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+    <div class="category" onclick="filterCategory('all')">All</div>
+    <div class="category" onclick="filterCategory('snacks')">Snacks</div>
+    <div class="category" onclick="filterCategory('beverages')">Beverages</div>
+    <div class="category" onclick="filterCategory('household')">Household</div>
+</div>
+
+<!-- PRODUCTS SECTION -->
+<h2 class="section-title" id="products">Popular Products</h2>
+
+<div class="products" id="products-grid">
+
+    <div class="product-card" data-category="snacks">
+        <img src="8.jpg" alt="Maggie">
+        <h3>Maggie Noodles</h3>
+        <p>Tasty instant noodles loved by all.</p>
+        <div class="price">₹20</div>
+        <button class="btn" onclick="addToCart('Maggie Noodles', 20)">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-category="beverages">
+        <img src="7.jpg" alt="Red Label Tea">
+        <h3>Red Label Tea</h3>
+        <p>Strong & refreshing premium tea.</p>
+        <div class="price">₹150</div>
+        <button class="btn" onclick="addToCart('Red Label Tea', 150)">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-category="household">
+        <img src="9.jpg" alt="Surf Excel">
+        <h3>Surf Excel</h3>
+        <p>Powerful cleaning detergent powder.</p>
+        <div class="price">₹200</div>
+        <button class="btn" onclick="addToCart('Surf Excel', 200)">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-category="snacks">
+        <img src="10.jpg" alt="Chips">
+        <h3>Lays Chips</h3>
+        <p>Crispy and delicious potato chips.</p>
+        <div class="price">₹30</div>
+        <button class="btn" onclick="addToCart('Lays Chips', 30)">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-category="beverages">
+        <img src="11.jpg" alt="Coke">
+        <h3>Coca Cola</h3>
+        <p>Refreshing carbonated drink.</p>
+        <div class="price">₹40</div>
+        <button class="btn" onclick="addToCart('Coca Cola', 40)">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-category="household">
+        <img src="12.jpg" alt="Dish Soap">
+        <h3>Fairy Dish Soap</h3>
+        <p>Effective dishwashing liquid.</p>
+        <div class="price">₹80</div>
+        <button class="btn" onclick="addToCart('Fairy Dish Soap', 80)">Add to Cart</button>
+    </div>
+
+</div>
+
+<!-- ABOUT SECTION -->
+<div class="about">
+    <h2 class="section-title">About Us</h2>
+    <p>Welcome to Balaji Kirana, your one-stop shop for all daily grocery needs. We offer fresh produce, snacks, beverages, and household essentials at affordable prices. Serving the community with quality and care since 2020.</p>
+</div>
+
+<!-- CONTACT SECTION -->
+<div class="contact" id="contact">
+    <h2 class="section-title">Contact Us</h2>
+    <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" rows="5" required></textarea>
+        <button class="btn" type="submit">Send Message</button>
+    </form>
+</div>
+
+<!-- CART MODAL -->
+<div id="cart-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+    <div style="background:white; margin:10% auto; padding:20px; width:80%; max-width:500px; border-radius:10px;">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <button class="btn" onclick="closeCart()">Close</button>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 Balaji Kirana | All Rights Reserved
+    <br>Call / WhatsApp: <b>+91 86056 29089</b>
+</footer>
+
+<script>
+    let cart = [];
+    let cartCount = 0;
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slides img');
+    const dots = document.querySelectorAll('.dot');
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        cartCount++;
+        document.getElementById('cart-count').textContent = cartCount;
+        alert(name + ' added to cart!');
+    }
+
+    function showCart() {
+        let items = '';
+        let total = 0;
+        cart.forEach(item => {
+            items += `<p>${item.name} - ₹${item.price}</p>`;
+            total += item.price;
+        });
+        items += `<p><strong>Total: ₹${total}</strong></p>`;
+        document.getElementById('cart-items').innerHTML = items;
+        document.getElementById('cart-modal').style.display = 'block';
+    }
+
+    function closeCart() {
+        document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    function filterCategory(category) {
+        const products = document.querySelectorAll('.product-card');
+        products.forEach(product => {
+            if (category === 'all' || product.dataset.category === category) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            dots[i].classList.remove('active');
+        });
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    function goToSlide(index) {
+        showSlide(index);
+    }
+
+    // Auto slide every 5 seconds
+    setInterval(nextSlide, 5000);
+
+    document.getElementById('search').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        const products = document.querySelectorAll('.product-card');
+        products.forEach(product => {
+            const title = product.querySelector('h3').textContent.toLowerCase();
+            if (title.includes(query)) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
